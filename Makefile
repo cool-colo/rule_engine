@@ -31,7 +31,7 @@ CXXFLAGS=-ggdb \
 		 -Wextra \
 		 -Wl,--whole-archive -lpthread -Wl,--no-whole-archive \
 		 -m64 \
-		 -std=c++17 \
+		 -std=c++20 \
 		 -fno-strict-aliasing \
 		 -Wno-invalid-offsetof \
 		 -Wno-deprecated \
@@ -47,9 +47,6 @@ CXXFLAGS=-ggdb \
 		 -static \
 		 -Wno-char-subscripts \
 		 -D__STDC_LIMIT_MACROS \
-		 -O0 
-		 #-Wno-unused-but-set-variable \
-		 -Wno-literal-suffix 
 
 INC_DIR=-I. \
 		-I./third_party/antlr/include/antlr4-runtime \
