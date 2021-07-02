@@ -39,7 +39,7 @@ public:
         st_.pop();
 
         std::shared_ptr<Node> acceptor = st_.top();
-        assert_type_semantic<IRuleEntryAcceptor>(acceptor, "bad cast to IRuleEntryAcceptor: " + ctx->getText());
+        Log::assert_type_semantic<IRuleEntryAcceptor>(acceptor, "bad cast to IRuleEntryAcceptor: " + ctx->getText());
         auto acc = std::dynamic_pointer_cast<IRuleEntryAcceptor>(acceptor);
         acc->accept_rule_entry(std::dynamic_pointer_cast<RuleEntry>(entry));
     }
@@ -63,7 +63,7 @@ public:
         st_.pop();
 
         std::shared_ptr<Node> acceptor = st_.top();
-        assert_type_semantic<IIfScopeAcceptor>(acceptor, "bad cast to IIfScopeAcceptor: " + ctx->getText());
+        Log::assert_type_semantic<IIfScopeAcceptor>(acceptor, "bad cast to IIfScopeAcceptor: " + ctx->getText());
         auto acc = std::dynamic_pointer_cast<IIfScopeAcceptor>(acceptor);
         acc->accept_if_scope(std::dynamic_pointer_cast<IfScope>(if_scope));
     }
@@ -78,7 +78,7 @@ public:
         st_.pop();
 
         std::shared_ptr<Node> acceptor = st_.top();
-        assert_type_semantic<IThenScopeAcceptor>(acceptor, "bad cast to IThenScopeAcceptor: " + ctx->getText());
+        Log::assert_type_semantic<IThenScopeAcceptor>(acceptor, "bad cast to IThenScopeAcceptor: " + ctx->getText());
         auto acc = std::dynamic_pointer_cast<IThenScopeAcceptor>(acceptor);
         acc->accept_then_scope(std::dynamic_pointer_cast<ThenScope>(then_scope));
     }
@@ -93,7 +93,7 @@ public:
         st_.pop();
 
         std::shared_ptr<Node> acceptor = st_.top();
-        assert_type_semantic<IThenExpressionsAcceptor>(acceptor, "bad cast to IThenExpressionsAcceptor: " + ctx->getText());
+        Log::assert_type_semantic<IThenExpressionsAcceptor>(acceptor, "bad cast to IThenExpressionsAcceptor: " + ctx->getText());
         auto acc = std::dynamic_pointer_cast<IThenExpressionsAcceptor>(acceptor);
         acc->accept_then_expressions(std::dynamic_pointer_cast<ThenExpressions>(expressions));
     }
@@ -108,7 +108,7 @@ public:
         st_.pop();
 
         std::shared_ptr<Node> acceptor = st_.top();
-        assert_type_semantic<IThenExpressionAcceptor>(acceptor, "bad cast to IThenExpressionAcceptor: " + ctx->getText());
+        Log::assert_type_semantic<IThenExpressionAcceptor>(acceptor, "bad cast to IThenExpressionAcceptor: " + ctx->getText());
         auto acc = std::dynamic_pointer_cast<IThenExpressionAcceptor>(acceptor);
         acc->accept_then_expression(std::dynamic_pointer_cast<ThenExpression>(expression));
     }
@@ -129,7 +129,7 @@ public:
         st_.pop();
 
         std::shared_ptr<Node> acceptor = st_.top();
-        assert_type_semantic<IAssignmentAcceptor>(acceptor, "bad cast to IAssignmentAcceptor: " + ctx->getText());
+        Log::assert_type_semantic<IAssignmentAcceptor>(acceptor, "bad cast to IAssignmentAcceptor: " + ctx->getText());
         auto acc = std::dynamic_pointer_cast<IAssignmentAcceptor>(acceptor);
         acc->accept_assignment(std::dynamic_pointer_cast<Assignment>(assignment));
     }
@@ -147,7 +147,7 @@ public:
         }
         
         auto acceptor = st_.top();
-        assert_type_semantic<IExpressionAcceptor>(acceptor, "bad cast to IExpressionAcceptor");
+        Log::assert_type_semantic<IExpressionAcceptor>(acceptor, "bad cast to IExpressionAcceptor");
         std::dynamic_pointer_cast<IExpressionAcceptor>(acceptor)->accept_expression(expr);
     }
 
@@ -204,7 +204,7 @@ public:
         st_.pop();
 
         auto acceptor = st_.top();
-        assert_type_semantic<IExpressionAtomAcceptor>(acceptor, "bad cast to IExpressionAtomAcceptor");
+        Log::assert_type_semantic<IExpressionAtomAcceptor>(acceptor, "bad cast to IExpressionAtomAcceptor");
         std::dynamic_pointer_cast<IExpressionAtomAcceptor>(acceptor)->accept_expression_atom(atom);
     }
 
@@ -218,7 +218,7 @@ public:
         st_.pop();
 
         auto acceptor = st_.top();
-        assert_type_semantic<IConstantAcceptor>(acceptor, "bad cast to IConstantAcceptor");
+        Log::assert_type_semantic<IConstantAcceptor>(acceptor, "bad cast to IConstantAcceptor");
         std::dynamic_pointer_cast<IConstantAcceptor>(acceptor)->accept_constant(c);
     }
 
@@ -235,7 +235,7 @@ public:
         st_.pop();
 
         auto acceptor = st_.top();
-        assert_type_semantic<IVariableAcceptor>(acceptor, "bad cast to IVariableAcceptor");
+        Log::assert_type_semantic<IVariableAcceptor>(acceptor, "bad cast to IVariableAcceptor");
         std::dynamic_pointer_cast<IVariableAcceptor>(acceptor)->accept_variable(var);
     }
 
@@ -249,14 +249,14 @@ public:
         st_.pop();
 
         auto acceptor = st_.top();
-        assert_type_semantic<IArrayMapSelector>(acceptor, "bad cast to IArrayMapSelector");
+        Log::assert_type_semantic<IArrayMapSelector>(acceptor, "bad cast to IArrayMapSelector");
         std::dynamic_pointer_cast<IArrayMapSelector>(acceptor)->accept_selector(selector);
     }
 
     void enterMemberVariable(cruleParser::MemberVariableContext * ctx) override { }
     void exitMemberVariable(cruleParser::MemberVariableContext * ctx) override { 
         auto acceptor = st_.top();
-        assert_type_semantic<IMemberVariableAcceptor>(acceptor, "bad cast to IVariableAcceptor");
+        Log::assert_type_semantic<IMemberVariableAcceptor>(acceptor, "bad cast to IVariableAcceptor");
         std::dynamic_pointer_cast<IMemberVariableAcceptor>(acceptor)->accept_member_variable(ctx->SIMPLENAME()->getText());
     }
 
@@ -271,7 +271,7 @@ public:
         st_.pop();
 
         auto acceptor = st_.top();
-        assert_type_semantic<IFunctionAcceptor>(acceptor, "bad cast to IFunctionAcceptor");
+        Log::assert_type_semantic<IFunctionAcceptor>(acceptor, "bad cast to IFunctionAcceptor");
         std::dynamic_pointer_cast<IFunctionAcceptor>(acceptor)->accept_function(func);
     }
 
@@ -288,7 +288,7 @@ public:
         st_.pop();
 
         auto acceptor = st_.top();
-        assert_type_semantic<IArgumentsAcceptor>(acceptor, "bad cast to IArgumentsAcceptor");
+        Log::assert_type_semantic<IArgumentsAcceptor>(acceptor, "bad cast to IArgumentsAcceptor");
         std::dynamic_pointer_cast<IArgumentsAcceptor>(acceptor)->accept_arguments(args);
     }
 
@@ -299,7 +299,7 @@ public:
         std::shared_ptr<Node> acceptor = st_.top();
         auto p = dynamic_cast<IFloatLiteralAcceptor*>(acceptor.get());
         if(p==nullptr) {
-            error("bad cast to IFloatLiteralAcceptor: " + ctx->getText());
+            Log::error("bad cast to IFloatLiteralAcceptor: " + ctx->getText());
         }
         p->accept_float_literal(l);
     }
@@ -317,7 +317,7 @@ public:
         std::shared_ptr<Node> acceptor = st_.top();
         auto p = dynamic_cast<IIntegerLiteralAcceptor*>(acceptor.get());
         if(p==nullptr) {
-            error("bad cast to IIntegerLiteralAcceptor: " + ctx->getText());
+            Log::error("bad cast to IIntegerLiteralAcceptor: " + ctx->getText());
         }
         p->accept_int_literal(l);
     }
@@ -339,7 +339,7 @@ public:
         std::shared_ptr<Node> acceptor = st_.top();
         auto p = dynamic_cast<IStringLiteralAcceptor*>(acceptor.get());
         if(p==nullptr) {
-            error("bad cast to IStringLiteralAcceptor: " + ctx->getText());
+            Log::error("bad cast to IStringLiteralAcceptor: " + ctx->getText());
         }
         p->accept_string_literal(l);
     }
@@ -351,7 +351,7 @@ public:
         std::shared_ptr<Node> acceptor = st_.top();
         auto p = dynamic_cast<IBooleanLiteralAcceptor*>(acceptor.get());
         if(p==nullptr) {
-            error("bad cast to IBooleanLiteralAcceptor: " + ctx->getText());
+            Log::error("bad cast to IBooleanLiteralAcceptor: " + ctx->getText());
         }
         p->accept_bool_literal(l);
     }
@@ -361,7 +361,7 @@ public:
     void exitEveryRule(antlr4::ParserRuleContext * ctx) override { }
     void visitTerminal(antlr4::tree::TerminalNode * node) override { }
     void visitErrorNode(antlr4::tree::ErrorNode * node) override {
-        error("Visiting error Node: " + node->getText());
+        Log::error("Visiting error Node: " + node->getText());
     }
     std::shared_ptr<Crl> get_crl() {
         return crl_;

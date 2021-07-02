@@ -49,7 +49,7 @@ public:
                 // method call
                 auto ans = evaluate_method(dctx);
                 if(!ans.is_valid()) {
-                    error("calling method " + function_->get_name() + " failed");
+			Log::error("calling method " + function_->get_name() + " failed");
                 }
             } else {
                 // global function call

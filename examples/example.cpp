@@ -7,6 +7,7 @@ struct Target {
     int age;
     std::string name;
     bool alive;
+    std::string* pname;
 };
 
 struct Killer {
@@ -46,6 +47,7 @@ RTTR_REGISTRATION {
         .property("age", &Target::age)
         .property("name", &Target::name)
         .property("alive", &Target::alive)
+        .property("pname", &Target::pname)
     ;
 
     rttr::registration::class_<Police>("Police")
@@ -55,6 +57,7 @@ RTTR_REGISTRATION {
 
 
 int main() {
+    std::cout<<"InMain"<<std::endl;
     const char* rule = R"(
         rule kill "this is a description" {
             if 
@@ -64,25 +67,41 @@ int main() {
                 Police.homicide_case += 11;
                 Police.homicide_case -= 3;
                 Police.homicide_case /= 3;
+                Assassin.target.pname = "xxxx";
+                Assassin.target.name = "xxxx";
+
+                rule kill "this is a description" {
+                    if 
+                        Assassin.target.age > 18 && Assassin.bullet > 0
+                    then
+                        Assassin.kill();
+                        Assassin.target.name = "yyy";
+                };
         }
     )";
 
     Killer killer;
     killer.target.age = 19;
     killer.target.name = "chuck norris";
+    killer.target.pname = new std::string("chuck norris");
     killer.target.alive = true;
-    killer.bullet = 1;
+    killer.bullet = 2;
 
     Police police;
     police.homicide_case = 22;
     rule_engine::Engine e;
+    std::cout<<"before loaded"<<std::endl;
     e.load_rules(rule);
+    std::cout<<"loaded"<<std::endl;
     rule_engine::DataContext dctx;
     dctx.add("Assassin", killer);
     dctx.add("Police", police);
     e.execute(&dctx);
+    std::cout<<"execute"<<std::endl;
     assert(killer.bullet == 0);  
-    // std::cout << "bullet " << killer.bullet << " homicide case " << police.homicide_case << std::endl;
+    std::cout << "bullet " << killer.bullet << " homicide case " << police.homicide_case << std::endl;
+    std::cout << "pname: "<< (*(killer.target.pname)) << std::endl;
+    std::cout << "name: "<< killer.target.name << std::endl;
     assert(police.homicide_case == 10);
     assert(!killer.target.alive);
 

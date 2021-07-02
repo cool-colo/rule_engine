@@ -29,6 +29,7 @@ CXXFLAGS=-ggdb \
 		 -Wall \
 		 -fPIC \
 		 -Wextra \
+		 -Wl,--whole-archive -lpthread -Wl,--no-whole-archive \
 		 -m64 \
 		 -std=c++17 \
 		 -fno-strict-aliasing \
@@ -43,6 +44,7 @@ CXXFLAGS=-ggdb \
 		 -Wno-narrowing \
 		 -Wno-parentheses \
 		 -Wno-unused-variable \
+		 -static \
 		 -Wno-char-subscripts \
 		 -D__STDC_LIMIT_MACROS \
 		 -O0 
@@ -50,8 +52,8 @@ CXXFLAGS=-ggdb \
 		 -Wno-literal-suffix 
 
 INC_DIR=-I. \
-		-I/usr/local/include/antlr4-runtime \
-		-I/user/local/include \
+		-I./third_party/antlr/include/antlr4-runtime \
+		-I./third_party/rttr/include \
 		-I$(ROOT) \
 		-I$(ROOT)/antlr/grammar \
 		-I$(ROOT)/antlr/grammar/generated \
@@ -64,6 +66,8 @@ INC_DIR=-I. \
 		-I$(DEPS_DIR)/misc \
 		-I$(DEPS_DIR)/support \
 
+LIB_DIR=       -L./third_party/antlr/lib \
+	       -L./third_party/rttr/lib
 
 LIB_INC= -lantlr4-runtime -lrttr_core
 
@@ -88,26 +92,28 @@ clean:
 .phony:clean
 
 OBJS += $(patsubst %.cpp,%.o, $(shell find antlr/grammar -name "*.cpp" | egrep -v "examples/example.cpp" | egrep -v "examples/map_vector.cpp"))
+OBJS += ./ast_processor/then_expression.cpp
+
 
 %.o:%.cpp
 	@echo "[[1;32;40mBUILD[0m][Target:'[1;32;40m$<[0m']"
-	$(CXX) $(CXXFLAGS) $(INC_DIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INC_DIR) $(LIB_DIR) -c $< -o $@
 
 %.o:%.cc
 	@echo "[[1;32;40mBUILD[0m][Target:'[1;32;40m$<[0m']"
-	$(CXX) $(CXXFLAGS) $(INC_DIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INC_DIR) $(LIB_DIR) -c $< -o $@
 
 %.o:%.c
 	@echo "[[1;32;40mBUILD[0m][Target:'[1;32;40m$<[0m']"
-	$(CXX) $(CXXFLAGS) $(INC_DIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INC_DIR) $(LIB_DIR) -c $< -o $@
 
 
 $(BUILDPATHROOT)/$(MODULE) : $(OBJS) 
-	$(CXX) -v -o $@ $(INC_DIR) $(LDFLAGS) $(CXXFLAGS) \
+	$(CXX) -v -o $@ $(INC_DIR) $(LIB_DIR) $(LDFLAGS) $(CXXFLAGS) \
 		$(EXAMPLE_DIR)/example.cpp $(OBJS) $(LIB_INC)
 
 $(BUILDPATHROOT)/$(SELECTOR) : $(OBJS) 
-	$(CXX) -v -o $@ $(INC_DIR) $(LDFLAGS) $(CXXFLAGS) \
+	$(CXX) -v -o $@ $(INC_DIR) $(LIB_DIR) $(LDFLAGS) $(CXXFLAGS) \
 		$(EXAMPLE_DIR)/map_vector.cpp $(OBJS) $(LIB_INC)
 
 PRE_BUILD:

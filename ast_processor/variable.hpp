@@ -53,7 +53,7 @@ public:
             // in this case, parent_ is not really the parent of the selector
             // e.g. for obj.m["a"], parent_ is obj.m
             if(!parent_) {
-                syntax_error("invalid selector " + get_crl_text() + ", preceeding selector name is required");
+                Log::syntax_error("invalid selector " + get_crl_text() + ", preceeding selector name is required");
             }
             auto selector = parent_->evaluate(dctx);
             auto key = selector_->evaluate(dctx);
@@ -63,12 +63,12 @@ public:
                 auto key_type = key.get_type();
                 if(!key_type.is_arithmetic() || key_type == rttr::type::get<float>() ||
                     key_type == rttr::type::get<double>()) {
-                    runtime_error("invalid index of array, must be integer type. " + get_crl_text());
+                    Log::runtime_error("invalid index of array, must be integer type. " + get_crl_text());
                 }
                 std::size_t vec_size = view.get_size();
                 int index = key.to_uint32();
                 if(index >= vec_size) {
-                    runtime_error("index out of range. " + get_crl_text());
+                    Log::runtime_error("index out of range. " + get_crl_text());
                 }
                 var = view.get_value(index).extract_wrapped_value();
             } else if(selector.is_associative_container()) {
@@ -107,7 +107,7 @@ public:
         if(selector_) {
             // this is a map, set or vector
             if(!parent_) {
-                syntax_error("invalid selector " + get_crl_text() + ", preceeding selector name is required");
+                Log::syntax_error("invalid selector " + get_crl_text() + ", preceeding selector name is required");
             }
             auto selector = parent_->evaluate(dctx);
             auto key = selector_->evaluate(dctx);
@@ -117,12 +117,12 @@ public:
                 auto key_type = key.get_type();
                 if(!key_type.is_arithmetic() || key_type == rttr::type::get<float>() ||
                     key_type == rttr::type::get<double>()) {
-                    runtime_error("invalid index of array, must be integer type. " + get_crl_text());
+                    Log::runtime_error("invalid index of array, must be integer type. " + get_crl_text());
                 }
                 std::size_t vec_size = view.get_size();
                 int index = key.to_uint32();
                 if(index >= vec_size) {
-                    runtime_error("index out of range. " + get_crl_text());
+                    Log::runtime_error("index out of range. " + get_crl_text());
                 }
                 var = view.get_value(index).extract_wrapped_value();
             } else if(selector.is_associative_container()) {
@@ -171,19 +171,19 @@ public:
     rttr::variant actual_assigned_value(rttr::variant original_var, rttr::variant var, ASSIGN_TYPE t) {
         switch(t) {
             case PLUS_ASSIGN:
-                var = process_addition(original_var, var);
+                var = Op::process_addition(original_var, var);
                 break;
             case MINUS_ASSIGN:
-                var = process_subtraction(original_var, var);
+                var = Op::process_subtraction(original_var, var);
                 break;
             case MUL_ASSIGN:
-                var = process_multiplication(original_var, var);
+                var = Op::process_multiplication(original_var, var);
                 break;
             case DIV_ASSIGN:
-                var = process_division(original_var, var);
+                var = Op::process_division(original_var, var);
                 break;
             case MOD_ASSIGN:
-                var = process_mod(original_var, var);
+                var = Op::process_mod(original_var, var);
                 break;
             default:
                 break;

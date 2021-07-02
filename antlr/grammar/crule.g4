@@ -37,6 +37,7 @@ thenExpressionList
 thenExpression
     : assignment
     | expressionAtom
+    | ruleEntry
     ;
 
 assignment

@@ -14,10 +14,10 @@ public:
     bool evaluate(IDataContext* dctx) {
         rttr::variant result = expression_->evaluate(dctx);
         if(!result.is_valid()) {
-            error("unresolved IfScope");
+		Log::error("unresolved IfScope");
         }
         if(result.get_type() != rttr::type::get<bool>()) {
-            error("invalid IfScope: not a boolean expression");
+		Log::error("invalid IfScope: not a boolean expression");
         }
         // info("IfScope evaluated: " + result.to_string());
         return result.to_bool();

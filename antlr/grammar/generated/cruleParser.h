@@ -1,5 +1,5 @@
 
-// Generated from crule.g4 by ANTLR 4.9
+// Generated from crule.g4 by ANTLR 4.9.2
 
 #pragma once
 
@@ -225,6 +225,7 @@ public:
     virtual size_t getRuleIndex() const override;
     AssignmentContext *assignment();
     ExpressionAtomContext *expressionAtom();
+    RuleEntryContext *ruleEntry();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
