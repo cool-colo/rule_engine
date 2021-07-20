@@ -4,6 +4,7 @@
 #include <string>
 
 #include "node.hpp"
+#include "utils.hpp"
 #include "constant.hpp"
 #include "variable.hpp"
 #include "function.hpp"
@@ -49,7 +50,7 @@ public:
                 // method call
                 auto ans = evaluate_method(dctx);
                 if(!ans.is_valid()) {
-			Log::error("calling method " + function_->get_name() + " failed");
+			      Log::error("calling method " + function_->get_name() + " failed");
                 }
             } else {
                 // global function call
@@ -67,17 +68,11 @@ public:
             ans = func.invoke_variadic(inst, *args);
         } else {
             auto var_atom = atom_->evaluate(dctx);
-            rttr::method func = var_atom.get_type().get_method(function_->get_name());
+            rttr::method func = Utils::get_unwrapped_type(var_atom).get_method(function_->get_name());
             auto args = function_->evaluate_args(dctx);
 
             // invoke the method
             ans = func.invoke_variadic(var_atom, *args);
-
-            if(atom_->is_assignable()) {
-                // we need to update object instance here caz the method
-                // might manipulate member variables
-                atom_->assign(dctx, var_atom);
-            }
         }
         return ans;
     }

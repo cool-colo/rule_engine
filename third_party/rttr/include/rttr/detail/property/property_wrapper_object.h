@@ -229,8 +229,10 @@ class property_wrapper<object_ptr, C*, void, Acc_Level, get_as_ref_wrapper, set_
         {
             if (arg.is_type<std::reference_wrapper<C>>())
                 return property_accessor<C>::set_value(*m_accessor, arg.get_value<std::reference_wrapper<C>>().get());
-            else
-                return false;
+            else if (arg.is_type<C>())
+                return property_accessor<C>::set_value(*m_accessor, arg.get_value<C>());
+            else 
+				return false;
         }
 
         variant get_value(instance& object) const

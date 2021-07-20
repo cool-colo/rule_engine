@@ -77,7 +77,7 @@ struct associative_container_mapper_wrapper : iterator_wrapper_base<Tp>
     get_value(const iterator_data& itr)
     {
         auto& it = itr_wrapper::get_iterator(itr);
-        return variant(std::ref(base_class::get_value(it)));
+        return variant(std::ref(const_cast<value_t&>(base_class::get_value(it))));
     }
 
     template<typename..., typename V = value_t, enable_if_t<std::is_void<V>::value, int> = 0>

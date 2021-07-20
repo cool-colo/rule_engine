@@ -177,6 +177,10 @@ class RTTR_LOCAL variant_associative_view_private
         {
             m_find_func(m_container, itr, key);
         }
+        RTTR_INLINE void find(iterator_data& itr, argument& key) const
+        {
+            m_find_func(m_container, itr, key);
+        }
 
         RTTR_INLINE void equal_range(argument& key,
                                      iterator_data& itr_begin, detail::iterator_data& itr_end)

@@ -758,6 +758,7 @@ struct RTTR_API variant_data_policy_void
             case variant_policy_operation::GET_PTR:
             {
                 arg.get_value<void*>() = nullptr;
+			    break;
             }
             case variant_policy_operation::GET_RAW_TYPE:
             {

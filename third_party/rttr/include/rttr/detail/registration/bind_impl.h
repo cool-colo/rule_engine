@@ -386,7 +386,7 @@ class registration::bind<detail::prop, Class_Type, A, acc_level> : public regist
                                                              detail::map_access_level_to_enum<acc_level>::value,
                                                              getter_policy, setter_policy,
                                                              Metadata_Count>>(name, type::get<Class_Type>(), acc, std::move(metadata_list));
-            return std::move(prop);
+            return prop;
         }
 
     public:

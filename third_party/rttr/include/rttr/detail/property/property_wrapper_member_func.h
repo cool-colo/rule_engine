@@ -298,7 +298,10 @@ class property_wrapper<member_func_ptr, Getter, Setter, Acc_Level, get_as_ref_wr
             {
                 (ptr->*m_setter)(arg.get_value<std::reference_wrapper<arg_type_t>>().get());
                 return true;
-            }
+            } else if (ptr && arg.is_type<arg_type_t>()){
+                (ptr->*m_setter)(arg.get_value<arg_type_t>());
+                return true;
+			}
             return false;
         }
 

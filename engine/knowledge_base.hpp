@@ -1,7 +1,6 @@
-#ifndef _RULE_ENGINE_KB_
-#define _RULE_ENGINE_KB_
-
+#pragma once
 #include <string>
+#include <memory>
 #include <unordered_map>
 #include "ast_processor/crl.hpp"
 namespace rule_engine {
@@ -24,4 +23,3 @@ private:
 
 }
 
-#endif

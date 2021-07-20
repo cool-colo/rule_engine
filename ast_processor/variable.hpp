@@ -1,6 +1,7 @@
 #ifndef _RULE_ENGINE_VARIABLE_
 #define _RULE_ENGINE_VARIABLE_
 
+#include "utils.hpp"
 #include "node.hpp"
 #include "op.hpp"
 #include "variable.hpp"
@@ -79,8 +80,12 @@ public:
                 } else {
                     auto it = view.find(key);
                     if(it != view.end()) {
-                        var = (*it).second.extract_wrapped_value();
-                    }
+                        var = it.get_value();
+                    }else{
+                        auto default_var = view.get_value_type().create();
+						var = view.insert(key, std::move(default_var)).first.get_value();
+						var = *(const_cast<rttr::variant*>(&var));
+					}
                 }
             }
         } else if(!has_parent()) {
@@ -88,7 +93,7 @@ public:
         } else {
             if(parent_->has_parent()) {
                 auto parent_var = parent_->evaluate(dctx);
-                rttr::property prop = parent_var.get_type().get_property(name_);
+                rttr::property prop = Utils::get_unwrapped_type(parent_var).get_property(name_);
                 var = prop.get_value(parent_var);
             } else {
                 auto inst = parent_->instance(dctx);
@@ -104,6 +109,7 @@ public:
     }
 
     void assign(IDataContext* dctx, rttr::variant var, ASSIGN_TYPE t = ASSIGN) {
+		std::cout<<"variant assign"<<std::endl;
         if(selector_) {
             // this is a map, set or vector
             if(!parent_) {
@@ -124,45 +130,50 @@ public:
                 if(index >= vec_size) {
                     Log::runtime_error("index out of range. " + get_crl_text());
                 }
-                var = view.get_value(index).extract_wrapped_value();
+                auto result = actual_assigned_value(view.get_value(index), var, t);
+				view.set_value(index, std::move(result));
             } else if(selector.is_associative_container()) {
                 // map, unordered_map
                 auto view = selector.create_associative_view();
                 if(view.is_key_only_type()) {
                     // set, unordered_set
                 } else {
-                    // info("assigning to a map "+var.to_string());
+					Log::info("assigning to a map key:" + key.to_string() + ",value:" + var.to_string());
                     auto it = view.find(key);
                     if(it != view.end()) {
                         view.erase(key);
-                        auto original_var = (*it).second.extract_wrapped_value();
-                        var = actual_assigned_value(original_var, var, t);
-                    }
-                    view.insert(key, var);
-                    parent_->assign(dctx, selector);
+                        auto resutl = actual_assigned_value(it.get_value(), var, t);
+                        view.insert(std::move(key), std::move(resutl));
+                    }else{
+                        auto default_var = view.get_value_type().create();
+                        auto result = actual_assigned_value(default_var, var, t);
+                        auto r = view.insert(std::move(key), std::move(result));
+					}
                 }
             }
         } else if(!has_parent()) {
             // TODO: 
         } else {
-            // TODO: this is too slow
             if(parent_->has_parent()) {
                 auto parent_var = parent_->evaluate(dctx);
-                rttr::property prop = parent_var.get_type().get_property(name_);
-                var = actual_assigned_value(parent_var, prop, var, t);
-                prop.set_value(parent_var, var);
-                parent_->assign(dctx, parent_var);
+                rttr::property prop = Utils::get_unwrapped_type(parent_var).get_property(name_);
+                auto original_var = prop.get_value(parent_var);
+                auto result = actual_assigned_value(original_var, var, t);
+				prop.set_value(parent_var, result);
+
             } else {
                 auto inst = parent_->instance(dctx);
                 rttr::property prop = inst.get_type().get_property(name_);
-                var = actual_assigned_value(inst, prop, var, t);
-                prop.set_value(inst, var);
+                auto original_var = prop.get_value(inst);
+                auto result = actual_assigned_value(original_var, var, t);
+                prop.set_value(inst, result);
             }
         }
     }
     rttr::variant actual_assigned_value(rttr::instance V, rttr::property prop, rttr::variant var, ASSIGN_TYPE t) {
         if(is_top_level_) {
             auto original_var = prop.get_value(V);
+	        std::cout<<"original_var:"<<original_var.to_int64()<<std::endl;
             var = actual_assigned_value(original_var, var, t);
         }
         return var;

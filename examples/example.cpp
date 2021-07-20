@@ -7,7 +7,6 @@ struct Target {
     int age;
     std::string name;
     bool alive;
-    std::string* pname;
 };
 
 struct Killer {
@@ -33,25 +32,24 @@ struct Police {
 
 RTTR_REGISTRATION {
     rttr::registration::class_<TheManagement>("TheManagement")
-        .property("location", &TheManagement::location)
-        .property("killer", &TheManagement::killer)
+        .property("location", &TheManagement::location)(rttr::policy::prop::as_reference_wrapper)
+        .property("killer", &TheManagement::killer)(rttr::policy::prop::as_reference_wrapper)
     ;
 
     rttr::registration::class_<Killer>("Killer")
-        .property("bullet", &Killer::bullet)
-        .property("target", &Killer::target)
+        .property("bullet", &Killer::bullet)(rttr::policy::prop::as_reference_wrapper)
+        .property("target", &Killer::target)(rttr::policy::prop::as_reference_wrapper)
         .method("kill", &Killer::kill)
     ;
 
     rttr::registration::class_<Target>("Target")
-        .property("age", &Target::age)
-        .property("name", &Target::name)
-        .property("alive", &Target::alive)
-        .property("pname", &Target::pname)
+        .property("age", &Target::age)(rttr::policy::prop::as_reference_wrapper)
+        .property("name", &Target::name)(rttr::policy::prop::as_reference_wrapper)
+        .property("alive", &Target::alive)(rttr::policy::prop::as_reference_wrapper)
     ;
 
     rttr::registration::class_<Police>("Police")
-        .property("homicide_case", &Police::homicide_case)
+        .property("homicide_case", &Police::homicide_case)(rttr::policy::prop::as_reference_wrapper)
     ;
 }
 
@@ -61,15 +59,15 @@ int main() {
     const char* rule = R"(
         rule kill "this is a description" {
             if 
-                Assassin.target.age > 18 && Assassin.bullet > 0
+                 Assassin.target.age > 18 && Assassin.bullet > 0
             then
                 Assassin.kill();
-                Police.homicide_case += 11;
-                Police.homicide_case -= 3;
-                Police.homicide_case /= 3;
-                Assassin.target.pname = "xxxx";
-                Assassin.target.name = "xxxx";
-
+                Assassin.target.age += 13;
+				Police.homicide_case += 11;
+				Police.homicide_case -= 3;
+				Police.homicide_case /= 3;
+				Assassin.target.name = "xxx";
+				
                 rule kill "this is a description" {
                     if 
                         Assassin.target.age > 18 && Assassin.bullet > 0
@@ -83,9 +81,8 @@ int main() {
     Killer killer;
     killer.target.age = 19;
     killer.target.name = "chuck norris";
-    killer.target.pname = new std::string("chuck norris");
     killer.target.alive = true;
-    killer.bullet = 2;
+    killer.bullet = 1;
 
     Police police;
     police.homicide_case = 22;
@@ -100,7 +97,6 @@ int main() {
     std::cout<<"execute"<<std::endl;
     assert(killer.bullet == 0);  
     std::cout << "bullet " << killer.bullet << " homicide case " << police.homicide_case << std::endl;
-    std::cout << "pname: "<< (*(killer.target.pname)) << std::endl;
     std::cout << "name: "<< killer.target.name << std::endl;
     assert(police.homicide_case == 10);
     assert(!killer.target.alive);

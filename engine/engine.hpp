@@ -14,6 +14,7 @@
 
 #include "data_context.hpp"
 #include "knowledge_base.hpp"
+#include "../log/logger.hpp"
 
 namespace rule_engine {
 
@@ -44,6 +45,7 @@ public:
         for(auto& rule_entry:crl->get_rule_entries()) {
             if(rule_entry.second->evaluate(dctx)) {
                 rule_entry.second->execute(dctx);
+				Log::info("rule:" + rule_entry.second->get_name() + " executed");
             }
         }
     }
