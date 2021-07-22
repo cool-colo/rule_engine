@@ -96,20 +96,19 @@ public:
                 rttr::property prop = Utils::get_unwrapped_type(parent_var).get_property(name_);
                 var = prop.get_value(parent_var);
             } else {
-                auto inst = parent_->instance(dctx);
+                auto& inst = parent_->instance(dctx);
                 rttr::property prop = inst.get_type().get_property(name_);
                 var = prop.get_value(inst);
             }
         }
         return var;
     }
-    rttr::instance instance(IDataContext* dctx) {
+    rttr::instance& instance(IDataContext* dctx) {
         // info("instance " + get_crl_text() + " " + name_);
         return dctx->get(name_);
     }
 
     void assign(IDataContext* dctx, rttr::variant var, ASSIGN_TYPE t = ASSIGN) {
-		std::cout<<"variant assign"<<std::endl;
         if(selector_) {
             // this is a map, set or vector
             if(!parent_) {
@@ -162,7 +161,7 @@ public:
 				prop.set_value(parent_var, result);
 
             } else {
-                auto inst = parent_->instance(dctx);
+                auto& inst = parent_->instance(dctx);
                 rttr::property prop = inst.get_type().get_property(name_);
                 auto original_var = prop.get_value(inst);
                 auto result = actual_assigned_value(original_var, var, t);
@@ -173,33 +172,33 @@ public:
     rttr::variant actual_assigned_value(rttr::instance V, rttr::property prop, rttr::variant var, ASSIGN_TYPE t) {
         if(is_top_level_) {
             auto original_var = prop.get_value(V);
-	        std::cout<<"original_var:"<<original_var.to_int64()<<std::endl;
             var = actual_assigned_value(original_var, var, t);
         }
         return var;
     }
 
-    rttr::variant actual_assigned_value(rttr::variant original_var, rttr::variant var, ASSIGN_TYPE t) {
+    rttr::variant actual_assigned_value(const rttr::variant& original_var, rttr::variant& var, ASSIGN_TYPE t) {
+		rttr::variant result = var;
         switch(t) {
             case PLUS_ASSIGN:
-                var = Op::process_addition(original_var, var);
+                result = Op::process_addition(original_var, var);
                 break;
             case MINUS_ASSIGN:
-                var = Op::process_subtraction(original_var, var);
+                result = Op::process_subtraction(original_var, var);
                 break;
             case MUL_ASSIGN:
-                var = Op::process_multiplication(original_var, var);
+                result = Op::process_multiplication(original_var, var);
                 break;
             case DIV_ASSIGN:
-                var = Op::process_division(original_var, var);
+                result = Op::process_division(original_var, var);
                 break;
             case MOD_ASSIGN:
-                var = Op::process_mod(original_var, var);
+                result = Op::process_mod(original_var, var);
                 break;
             default:
                 break;
         }
-        return var;
+        return result;
     }
 
     rttr::type type() {

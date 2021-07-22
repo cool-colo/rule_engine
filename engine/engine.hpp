@@ -38,14 +38,14 @@ public:
     void execute(DataContext* dctx) {
         std::shared_ptr<Crl> crl;
         {
-            std::shared_lock lock(mtx_);
+//            std::shared_lock lock(mtx_);
             crl = kb_.get_crl();
         }
         
         for(auto& rule_entry:crl->get_rule_entries()) {
             if(rule_entry.second->evaluate(dctx)) {
                 rule_entry.second->execute(dctx);
-				Log::info("rule:" + rule_entry.second->get_name() + " executed");
+				//Log::info("rule:" + rule_entry.second->get_name() + " executed");
             }
         }
     }

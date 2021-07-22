@@ -62,7 +62,7 @@ public:
     rttr::variant evaluate_method(IDataContext *dctx) {
         rttr::variant ans;
         if(atom_->contain_instance()) {
-            rttr::instance inst = atom_->instance(dctx);
+            rttr::instance& inst = atom_->instance(dctx);
             auto func = inst.get_type().get_method(function_->get_name());
             auto args = function_->evaluate_args(dctx);
             ans = func.invoke_variadic(inst, *args);
@@ -81,7 +81,7 @@ public:
         return !atom_ && variable_ && !variable_->has_parent();
     }
 
-    rttr::instance instance(IDataContext *dctx) {
+    rttr::instance& instance(IDataContext *dctx) {
         return variable_->instance(dctx);
     }
 

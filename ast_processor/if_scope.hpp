@@ -13,13 +13,12 @@ public:
     IfScope() {}
     bool evaluate(IDataContext* dctx) {
         rttr::variant result = expression_->evaluate(dctx);
-        if(!result.is_valid()) {
-		Log::error("unresolved IfScope");
+        if(!result.is_valid()) [[ unlikely ]] {
+		  Log::error("unresolved IfScope");
         }
-        if(result.get_type() != rttr::type::get<bool>()) {
-		Log::error("invalid IfScope: not a boolean expression");
+        if(result.get_type() != rttr::type::get<bool>()) [[ unlikely ]] {
+		  Log::error("invalid IfScope: not a boolean expression");
         }
-        // info("IfScope evaluated: " + result.to_string());
         return result.to_bool();
     }
     void accept_expression(std::shared_ptr<Expression> expr) {

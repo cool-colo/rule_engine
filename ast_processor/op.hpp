@@ -1,18 +1,19 @@
 #pragma once
 #include <rttr/registration>
 #include "log/logger.hpp"
+#include "utils.hpp"
 
 namespace rule_engine {
 
 struct Op {
 
-static rttr::variant process_multiplication(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
+static rttr::variant process_multiplication(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
      
-    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) {
+    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) [[ unlikely ]] {
 	    Log::Log::runtime_error("invalid oprand for *, must be arithmetic");
-    } else if(left_type != right_type) {
+    } else if(left_type != right_type) [[ unlikely ]] {
         Log::Log::runtime_error("mismatched type for *");
     }
     if (left_type == rttr::type::get<int8_t>())
@@ -36,13 +37,13 @@ static rttr::variant process_multiplication(rttr::variant& left, rttr::variant& 
     return rttr::variant();
 }
 
-static rttr::variant process_division(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
+static rttr::variant process_division(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
      
-    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) {
+    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) [[ unlikely ]]{
 	    Log::Log::runtime_error("invalid oprand for /, must be arithmetic");
-    } else if(left_type != right_type) {
+    } else if(left_type != right_type) [[ unlikely ]]{
         Log::Log::runtime_error("mismatched type for /");
     }
 
@@ -68,13 +69,13 @@ static rttr::variant process_division(rttr::variant& left, rttr::variant& right)
     return rttr::variant();
 }
 
-static rttr::variant process_mod(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
+static rttr::variant process_mod(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
      
-    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) {
+    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) [[ unlikely ]]{
 	    Log::Log::runtime_error("invalid oprand for %, must be arithmetic");
-    } else if(left_type != right_type) {
+    } else if(left_type != right_type) [[ unlikely ]]{
         Log::Log::runtime_error("mismatched type for %");
     }
 
@@ -99,10 +100,10 @@ static rttr::variant process_mod(rttr::variant& left, rttr::variant& right) {
     return rttr::variant();
 }
 
-static rttr::variant process_addition(rttr::variant& left, rttr::variant& right) {
+static rttr::variant process_addition(const rttr::variant& left, rttr::variant& right) {
 
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
      
 
     if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) {
@@ -131,13 +132,13 @@ static rttr::variant process_addition(rttr::variant& left, rttr::variant& right)
     return rttr::variant();
 }
 
-static rttr::variant process_subtraction(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
+static rttr::variant process_subtraction(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
      
-    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) {
+    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) [[ unlikely ]]{
 	    Log::Log::runtime_error("invalid oprand for -, must be arithmetic");
-    } else if(left_type != right_type) {
+    } else if(left_type != right_type) [[ unlikely ]]{
         Log::Log::runtime_error("mismatched type for -");
     }
     if (left_type == rttr::type::get<int8_t>())
@@ -162,11 +163,11 @@ static rttr::variant process_subtraction(rttr::variant& left, rttr::variant& rig
 }
 
 // TODO: tune and & or ops
-static rttr::variant process_and(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
+static rttr::variant process_and(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
 
-    if(left_type != rttr::type::get<bool>() || right_type != rttr::type::get<bool>()) {
+    if(left_type != rttr::type::get<bool>() || right_type != rttr::type::get<bool>()) [[ unlikely ]]{
         Log::error("oprand has to be boolean type in process_and");
     }
 
@@ -174,10 +175,10 @@ static rttr::variant process_and(rttr::variant& left, rttr::variant& right) {
     return false;
 }
 
-static rttr::variant process_or(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
-    if(left_type != rttr::type::get<bool>() || right_type != rttr::type::get<bool>()) {
+static rttr::variant process_or(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
+    if(left_type != rttr::type::get<bool>() || right_type != rttr::type::get<bool>()) [[ unlikely ]]{
         Log::error("oprand has to be boolean type in process_and");
     }
 
@@ -185,56 +186,54 @@ static rttr::variant process_or(rttr::variant& left, rttr::variant& right) {
     return false;
 }
 
-static rttr::variant process_gt(rttr::variant& left, rttr::variant& right) {
-	std::cout<<"lvalue:"<<left.to_int64()<<std::endl;
-	std::cout<<"rvalue:"<<right.to_int64()<<std::endl;
+static rttr::variant process_gt(const rttr::variant& left, rttr::variant& right) {
 
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
 
-    if(left_type != right_type) {
+    if(left_type != right_type) [[ unlikely ]]{
         Log::error("mismatched type in process_gt");
     }
     
     return left > right;
 }
 
-static rttr::variant process_get(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
-    if(left_type != right_type) {
+static rttr::variant process_get(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
+    if(left_type != right_type) [[ unlikely ]]{
         Log::error("mismatched type in process_get");
     }
     
     return left >= right;
 }
 
-static rttr::variant process_lt(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
-    if(left_type != right_type) {
+static rttr::variant process_lt(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
+    if(left_type != right_type) [[ unlikely ]]{
         Log::error("mismatched type in process_lt");
     }
     
     return left < right;
 }
 
-static rttr::variant process_let(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
-    if(left_type != right_type) {
+static rttr::variant process_let(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
+    if(left_type != right_type) [[ unlikely ]]{
         Log::error("mismatched type in process_let");
     }
     
     return left <= right;
 }
 
-static rttr::variant process_bit_and(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
-    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) {
+static rttr::variant process_bit_and(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
+    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) [[ unlikely ]]{
         Log::Log::runtime_error("invalid oprand for &, must be arithmetic");
-    } else if(left_type != right_type) {
+    } else if(left_type != right_type)[[ unlikely ]] {
         Log::Log::runtime_error("mismatched type for &");
     }
     if (left_type == rttr::type::get<int8_t>())
@@ -253,17 +252,17 @@ static rttr::variant process_bit_and(rttr::variant& left, rttr::variant& right) 
         return left.to_uint32() & right.to_uint32();
     else if (left_type == rttr::type::get<uint64_t>())
         return left.to_uint64() & right.to_uint64();
-    else if (left_type == rttr::type::get<float>() || left_type == rttr::type::get<double>())
+    else if (left_type == rttr::type::get<float>() || left_type == rttr::type::get<double>())[[ unlikely ]]
         Log::Log::runtime_error("float number cannot be applied by operator &");
     return rttr::variant();
 }
 
-static rttr::variant process_bit_or(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
-    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) {
+static rttr::variant process_bit_or(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
+    if(!left_type.is_arithmetic() || !right_type.is_arithmetic()) [[ unlikely ]]{
         Log::Log::runtime_error("invalid oprand for |, must be arithmetic");
-    } else if(left_type != right_type) {
+    } else if(left_type != right_type) [[ unlikely ]]{
         Log::Log::runtime_error("mismatched type for |");
     }
     if (left_type == rttr::type::get<int8_t>())
@@ -282,26 +281,24 @@ static rttr::variant process_bit_or(rttr::variant& left, rttr::variant& right) {
         return left.to_uint32() | right.to_uint32();
     else if (left_type == rttr::type::get<uint64_t>())
         return left.to_uint64() | right.to_uint64();
-    else if (left_type == rttr::type::get<float>() || left_type == rttr::type::get<double>())
+    else if (left_type == rttr::type::get<float>() || left_type == rttr::type::get<double>())[[ unlikely ]]
         Log::Log::runtime_error("float number cannot be applied by operator |");
     return rttr::variant();
 }
 
-static rttr::variant process_equal(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
-    if(left_type != right_type) {
+static rttr::variant process_equal(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
+    if(left_type != right_type) [[ unlikely ]]{
         Log::error("mismatched type in process_equal");
     }
-	//std::cout<<"equal lvalue:"<<left.get_value<std::string>()<<std::endl;
-	//std::cout<<"equal rvalue:"<<right.get_value<std::string>()<<std::endl;
     return left == right;
 }
 
-static rttr::variant process_not_equal(rttr::variant& left, rttr::variant& right) {
-	auto left_type = left.get_type().is_wrapper() ? left.get_type().get_wrapped_type() : left.get_type();
-	auto right_type = right.get_type().is_wrapper() ? right.get_type().get_wrapped_type() : right.get_type();
-    if(left_type != right_type) {
+static rttr::variant process_not_equal(const rttr::variant& left, rttr::variant& right) {
+    auto left_type = Utils::get_unwrapped_type(left);
+    auto right_type = Utils::get_unwrapped_type(right);
+    if(left_type != right_type) [[ unlikely ]]{
         Log::error("mismatched type in process_not_equal");
     }
     

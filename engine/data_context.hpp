@@ -20,7 +20,7 @@ public:
         map_.erase(name);
     }
 
-    rttr::instance get(const std::string& name) {
+    rttr::instance& get(const std::string& name) {
         return map_[name];
     }
 private:

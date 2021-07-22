@@ -26,6 +26,8 @@ LDFLAGS=
 CXXFLAGS=-ggdb \
 		 -pipe \
 		 -W \
+		 -g \
+		 -O2 \
 		 -Wall \
 		 -fPIC \
 		 -Wextra \

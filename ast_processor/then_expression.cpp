@@ -7,10 +7,8 @@ namespace rule_engine {
 
 void ThenExpression::execute(IDataContext* dctx) {
       if(assignment_) {
-		  std::cout<<"then expression assignment"<<std::endl;
           assignment_->execute(dctx);
       } else if(atom_) {
-		  std::cout<<"then expression atom"<<std::endl;
           atom_->execute(dctx);
       } else if (rule_entry_){
         if(rule_entry_->evaluate(dctx)){
