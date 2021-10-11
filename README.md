@@ -92,3 +92,5 @@ Then `Engine` itself is stateless, it's safe to call `execute` concurrently. `Da
 
 std::shared_ptr<std::vector<rttr::argument>> evaluate(IDataContext* dctx)  
 variant析构了， agrument的内容非法
+
+函数调用时，参数类型校验非常严格，例如不可以把int传给unsigned int, 调用会报错(rttr method_invoker.h中有校验)
