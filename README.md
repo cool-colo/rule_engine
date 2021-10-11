@@ -87,3 +87,8 @@ rule_engine is a c++ rule engine library
 ## advanced 
 
 Then `Engine` itself is stateless, it's safe to call `execute` concurrently. `DataContext` on the other hand not only contains objects to be accessed and manipulated by rules, but also caches intermediate data that accelerates expression evaluation. So it's users' responsibility to guard it when accessed by multiple threads. The best practice is to instantiate one `DataContext` for each thread, which eliminates locks and maximize performance.
+
+## bug list
+
+std::shared_ptr<std::vector<rttr::argument>> evaluate(IDataContext* dctx)  
+variant析构了， agrument的内容非法
